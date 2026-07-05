@@ -30,7 +30,7 @@
                             </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="tcs-safe-001"/>
-                        <color key="backgroundColor" red="0.0392156862745098" green="0.0392156862745098" blue="0.054901960784313725" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.058823529411764705" green="0.058823529411764705" blue="0.08235294117647059" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="tcs-img-001" firstAttribute="centerX" secondItem="tcs-view-001" secondAttribute="centerX" id="tcs-c-imgx"/>
                             <constraint firstItem="tcs-img-001" firstAttribute="centerY" secondItem="tcs-view-001" secondAttribute="centerY" constant="-40" id="tcs-c-imgy"/>

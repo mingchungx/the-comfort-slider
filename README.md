@@ -3,6 +3,10 @@
 A playful iOS app that answers one question: **what salary would you need to
 comfortably — or very *un*comfortably — afford this?**
 
+<p align="center">
+  <img src="assets/demo.gif" width="300" alt="The Comfort Slider demo" />
+</p>
+
 Enter a total price and your financing (down payment, APR, term, and optional
 sales tax), then drag the comfort slider from **Comfortable → Stretching →
 Unhinged**. The app works out the monthly payment and the annual salary that
