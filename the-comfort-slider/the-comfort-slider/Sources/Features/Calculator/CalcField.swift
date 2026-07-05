@@ -1,0 +1,3 @@
+enum CalcField {
+    case price
+}
