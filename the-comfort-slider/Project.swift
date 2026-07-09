@@ -7,12 +7,15 @@ let project = Project(
             name: "the-comfort-slider",
             destinations: .iOS,
             product: .app,
-            bundleId: "dev.tuist.the-comfort-slider",
+            bundleId: "com.eclipsecard.thecomfortslider",
             deploymentTargets: .iOS("26.0"),
             infoPlist: .extendingDefault(
                 with: [
                     "CFBundleDisplayName": "The Comfort Slider",
+                    "CFBundleShortVersionString": "1.0",
+                    "CFBundleVersion": "1",
                     "UILaunchStoryboardName": "LaunchScreen",
+                    "ITSAppUsesNonExemptEncryption": false,
                 ]
             ),
             buildableFolders: [
@@ -27,7 +30,7 @@ let project = Project(
             name: "the-comfort-sliderTests",
             destinations: .iOS,
             product: .unitTests,
-            bundleId: "dev.tuist.the-comfort-sliderTests",
+            bundleId: "com.eclipsecard.thecomfortslider.tests",
             deploymentTargets: .iOS("26.0"),
             infoPlist: .default,
             buildableFolders: [
