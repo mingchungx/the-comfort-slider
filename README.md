@@ -4,7 +4,9 @@ A playful iOS app that answers one question: **what salary would you need to
 comfortably — or very *un*comfortably — afford this?**
 
 <p align="center">
-  <img src="assets/demo.gif" width="300" alt="The Comfort Slider demo" />
+  <img src="assets/screenshot_1.png" width="250" alt="The Comfort Slider screenshot 1" />
+  <img src="assets/screenshot_2.png" width="250" alt="The Comfort Slider screenshot 2" />
+  <img src="assets/screenshot_3.png" width="250" alt="The Comfort Slider screenshot 3" />
 </p>
 
 Enter a total price and your financing (down payment, APR, term, and optional
