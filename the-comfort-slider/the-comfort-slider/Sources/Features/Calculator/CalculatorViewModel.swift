@@ -27,6 +27,8 @@ final class CalculatorViewModel {
     }
 
     var taxEnabled = false
+    var expensesEnabled = false
+    var expenses: [AdditionalExpense] = [AdditionalExpense()]
     var defaultSalary: Decimal?
 
     private(set) var committedSliderValue = 50.0
@@ -52,6 +54,7 @@ final class CalculatorViewModel {
             downPaymentPercent: downPaymentPercent,
             annualRatePercent: aprPercent,
             months: termMonths,
+            monthlyExtras: monthlyExtras,
             sliderValue: committedSliderValue
         )
         // While the slider is anchored to the default salary, show that exact
@@ -60,11 +63,23 @@ final class CalculatorViewModel {
         return base.withRequiredIncome(defaultSalary)
     }
 
-    /// The monthly payment, independent of the comfort slider — used to reposition
-    /// the slider against a fixed salary without feeding back on itself.
-    var monthly: Decimal? {
-        result?.monthlyPayment
+    /// Recurring costs normalised to a monthly total. Zero while the feature is
+    /// off, so turning the toggle off restores the financing-only math without
+    /// discarding what the user typed.
+    var monthlyExtras: Decimal {
+        guard expensesEnabled else { return .zero }
+        return expenses.reduce(.zero) { $0 + $1.monthlyAmount }
     }
+
+    /// The full monthly outflow, independent of the comfort slider — used to
+    /// reposition the slider against a fixed salary without feeding back on
+    /// itself. It includes the extras, so adding a cost slides the comfort level
+    /// exactly as raising the price would.
+    var monthly: Decimal? {
+        result?.totalMonthlyCost
+    }
+
+    var canRemoveExpense: Bool { expenses.count > 1 }
 
     /// Price plus sales tax (when enabled). Everything downstream — down payment,
     /// financing, interest — is computed from this out-the-door total.
@@ -100,6 +115,16 @@ final class CalculatorViewModel {
     func decreaseDownPayment() { downPaymentPercent = max(0, downPaymentPercent - Constants.percentStep) }
     func increaseTax() { taxPercent = min(Constants.taxMax, taxPercent + Constants.taxStep) }
     func decreaseTax() { taxPercent = max(0, taxPercent - Constants.taxStep) }
+
+    func addExpense() {
+        expenses.append(AdditionalExpense())
+    }
+
+    /// The section always keeps one row, so there is something to type into.
+    func removeExpense(_ id: AdditionalExpense.ID) {
+        guard canRemoveExpense else { return }
+        expenses.removeAll { $0.id == id }
+    }
 
     /// Moves the slider so its comfort level reflects the fixed default salary at
     /// the current monthly payment. Called when the price or financing changes,

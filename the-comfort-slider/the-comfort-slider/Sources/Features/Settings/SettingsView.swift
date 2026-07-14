@@ -60,6 +60,15 @@ struct SettingsView: View {
                 }
 
                 Section {
+                    Toggle("Enable additional costs", isOn: $preferences.expensesEnabled)
+                        .tint(.green)
+                } header: {
+                    Text("Additional costs")
+                } footer: {
+                    Text("Adds recurring costs like gas or insurance to the calculator, counted towards your monthly cost.")
+                }
+
+                Section {
                     legalLink("Website", url: Constants.websiteURL)
                     legalLink("Privacy Policy", url: Constants.privacyURL)
                     legalLink("Terms of Use", url: Constants.termsURL)

@@ -107,14 +107,28 @@ private extension ComfortResultView {
 
     func monthlyLine(_ result: AffordabilityResult) -> some View {
         VStack(spacing: Constants.tightSpacing) {
-            (Text(result.monthlyPayment, format: currencyFormat).font(.title2.bold())
+            (Text(result.totalMonthlyCost, format: currencyFormat).font(.title2.bold())
                 + Text(" / mo").font(.subheadline).foregroundStyle(.secondary))
                 .contentTransition(.numericText())
-                .animation(.snappy, value: result.monthlyPayment)
+                .animation(.snappy, value: result.totalMonthlyCost)
             Text("\(termLabel(result)) · \(aprLabel(result))")
                 .font(.caption)
                 .foregroundStyle(.secondary)
+            if result.monthlyExtras > .zero {
+                Text(breakdownLabel(result))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .contentTransition(.numericText())
+                    .animation(.snappy, value: result.monthlyExtras)
+            }
         }
+    }
+
+    /// Only shown once extras exist, so the headline figure is always explainable.
+    func breakdownLabel(_ result: AffordabilityResult) -> String {
+        let financing = result.monthlyPayment.formatted(currencyFormat)
+        let extras = result.monthlyExtras.formatted(currencyFormat)
+        return "\(financing) financing + \(extras) costs"
     }
 
     var roastLine: some View {

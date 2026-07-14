@@ -1,9 +1,13 @@
 import Foundation
 
 struct AffordabilityResult {
+    /// The financing payment alone — principal and interest on the amount borrowed.
     let monthlyPayment: Decimal
+    /// Recurring costs that ride along with the purchase but are not financed:
+    /// gas, insurance, maintenance. Already normalised to a monthly figure.
+    let monthlyExtras: Decimal
     /// `nil` when the comfort level implies 0% of income — i.e. no finite
-    /// salary can make this payment that small a share of your money.
+    /// salary can make this cost that small a share of your money.
     let requiredAnnualIncome: Decimal?
     let totalInterest: Decimal
     let dtiFraction: Double
@@ -11,9 +15,17 @@ struct AffordabilityResult {
     let annualRatePercent: Double
     let zone: ComfortZone
 
+    /// What the purchase actually takes out of your pocket each month. This — not
+    /// the financing payment alone — is what competes with your income, so it is
+    /// what the comfort math runs on.
+    var totalMonthlyCost: Decimal {
+        monthlyPayment + monthlyExtras
+    }
+
     func withRequiredIncome(_ income: Decimal) -> AffordabilityResult {
         AffordabilityResult(
             monthlyPayment: monthlyPayment,
+            monthlyExtras: monthlyExtras,
             requiredAnnualIncome: income,
             totalInterest: totalInterest,
             dtiFraction: dtiFraction,
@@ -30,18 +42,22 @@ struct AffordabilityCalculator {
         downPaymentPercent: Int,
         annualRatePercent: Double,
         months: Int,
+        monthlyExtras: Decimal,
         sliderValue: Double
     ) -> AffordabilityResult {
         let scale = ComfortScale(sliderValue: sliderValue)
         let financed = totalPrice * Decimal(100 - downPaymentPercent) / 100
         let monthly = monthlyPayment(principal: financed, annualRatePercent: annualRatePercent, months: months)
-        let monthlyValue = (monthly as NSDecimalNumber).doubleValue
+        let totalMonthly = monthly + monthlyExtras
+        let totalMonthlyValue = (totalMonthly as NSDecimalNumber).doubleValue
         let requiredAnnualIncome: Decimal? = scale.isAffordable
-            ? Decimal(monthlyValue / scale.dtiFraction * 12)
+            ? Decimal(totalMonthlyValue / scale.dtiFraction * 12)
             : nil
+        // Extras are paid, not borrowed, so they never accrue interest.
         let totalInterest = max(.zero, monthly * Decimal(months) - financed)
         return AffordabilityResult(
             monthlyPayment: monthly,
+            monthlyExtras: monthlyExtras,
             requiredAnnualIncome: requiredAnnualIncome,
             totalInterest: totalInterest,
             dtiFraction: scale.dtiFraction,

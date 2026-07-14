@@ -8,6 +8,10 @@ final class PreferencesStore {
         didSet { UserDefaults.standard.set(taxEnabled, forKey: Keys.taxEnabled) }
     }
 
+    var expensesEnabled: Bool {
+        didSet { UserDefaults.standard.set(expensesEnabled, forKey: Keys.expensesEnabled) }
+    }
+
     var salaryText: String {
         didSet {
             let sanitized = AmountSanitizer.sanitize(salaryText)
@@ -48,6 +52,7 @@ final class PreferencesStore {
 
     init() {
         taxEnabled = UserDefaults.standard.bool(forKey: Keys.taxEnabled)
+        expensesEnabled = UserDefaults.standard.bool(forKey: Keys.expensesEnabled)
         salaryText = UserDefaults.standard.string(forKey: Keys.salaryText) ?? ""
         defaultAPRText = UserDefaults.standard.string(forKey: Keys.defaultAPRText) ?? Constants.initialAPRText
         defaultTaxText = UserDefaults.standard.string(forKey: Keys.defaultTaxText) ?? ""
@@ -56,6 +61,7 @@ final class PreferencesStore {
 
 private enum Keys {
     static let taxEnabled = "taxEnabled"
+    static let expensesEnabled = "expensesEnabled"
     static let salaryText = "defaultSalaryText"
     static let defaultAPRText = "defaultAPRText"
     static let defaultTaxText = "defaultTaxText"

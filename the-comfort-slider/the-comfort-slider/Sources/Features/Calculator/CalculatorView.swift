@@ -22,6 +22,9 @@ struct CalculatorView: View {
             .onChange(of: preferences.taxEnabled, initial: true) { _, enabled in
                 viewModel.taxEnabled = enabled
             }
+            .onChange(of: preferences.expensesEnabled, initial: true) { _, enabled in
+                viewModel.expensesEnabled = enabled
+            }
             .onChange(of: preferences.defaultAPR, initial: true) { _, apr in
                 viewModel.aprPercent = apr
             }
@@ -46,6 +49,9 @@ private extension CalculatorView {
                 financingSection
                 if preferences.taxEnabled {
                     taxSection
+                }
+                if preferences.expensesEnabled {
+                    expensesSection
                 }
                 comfortResult
             }
@@ -83,6 +89,18 @@ private extension CalculatorView {
             onDecreaseTax: viewModel.decreaseTax,
             onIncreaseTax: viewModel.increaseTax,
             currency: currencyStore.selected
+        )
+    }
+
+    var expensesSection: some View {
+        ExpensesView(
+            expenses: $viewModel.expenses,
+            monthlyTotal: viewModel.monthlyExtras,
+            canRemove: viewModel.canRemoveExpense,
+            currency: currencyStore.selected,
+            focus: $focused,
+            onAdd: viewModel.addExpense,
+            onRemove: viewModel.removeExpense
         )
     }
 
