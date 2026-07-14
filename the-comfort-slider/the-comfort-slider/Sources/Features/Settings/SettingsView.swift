@@ -3,6 +3,7 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(CurrencyStore.self) private var currencyStore
     @Environment(PreferencesStore.self) private var preferences
+    @Environment(\.dismiss) private var dismiss
     @FocusState private var focusedField: SettingsField?
 
     var body: some View {
@@ -79,12 +80,19 @@ struct SettingsView: View {
                 }
             }
             .scrollDismissesKeyboard(.interactively)
-            .navigationTitle("Settings")
             .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") { dismiss() }
+                        .fontWeight(.semibold)
+                }
                 ToolbarItemGroup(placement: .keyboard) {
                     Spacer()
-                    Button("Done") { focusedField = nil }
-                        .fontWeight(.semibold)
+                    Button {
+                        focusedField = nil
+                    } label: {
+                        Image(systemName: "keyboard.chevron.compact.down")
+                    }
+                    .accessibilityLabel("Dismiss keyboard")
                 }
             }
         }

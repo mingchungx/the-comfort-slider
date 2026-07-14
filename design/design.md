@@ -106,9 +106,13 @@ Haptics are part of the feel — use `.sensoryFeedback` (no UIKit):
 - Monetary/percentage entry uses `.keyboardType(.decimalPad)` and is sanitized
   through the shared `AmountSanitizer` (digits, one decimal separator, ≤2 fraction
   digits, locale-aware decimal key normalized to `.`).
-- **Keyboards must be dismissable.** Provide a keyboard toolbar `Done` button
+- **Keyboards must be dismissable.** Provide a keyboard toolbar button
   (`ToolbarItemGroup(placement: .keyboard)`) and `.scrollDismissesKeyboard(.interactively)`.
-  Decimal pads have no return key, so both are required.
+  Decimal pads have no return key, so both are required — gestures alone are not
+  discoverable enough.
+- The keyboard button is the **`keyboard.chevron.compact.down` icon**, never a text
+  "Done": it reads as a keyboard control, and it won't collide with a sheet's own
+  "Done" in the navigation bar.
 - The price field auto-focuses ~0.5s after the calculator appears so the pad is
   ready without a tap.
 

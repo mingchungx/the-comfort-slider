@@ -4,6 +4,7 @@ struct CalculatorView: View {
     @Environment(CurrencyStore.self) private var currencyStore
     @Environment(PreferencesStore.self) private var preferences
     @State private var viewModel = CalculatorViewModel()
+    @State private var isShowingSettings = false
     @FocusState private var focused: CalcField?
 
     var body: some View {
@@ -16,7 +17,13 @@ struct CalculatorView: View {
             .background(ShaderBackground(zone: viewModel.zone))
             .navigationTitle("The Comfort Slider")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar { keyboardToolbar }
+            .toolbar {
+                settingsToolbar
+                keyboardToolbar
+            }
+            .sheet(isPresented: $isShowingSettings) {
+                SettingsView()
+            }
             .onChange(of: viewModel.zone) { viewModel.refreshRoastIfNeeded() }
             .task { viewModel.refreshRoastIfNeeded() }
             .onChange(of: preferences.taxEnabled, initial: true) { _, enabled in
@@ -116,11 +123,30 @@ private extension CalculatorView {
     }
 
     @ToolbarContentBuilder
+    var settingsToolbar: some ToolbarContent {
+        ToolbarItem(placement: .topBarLeading) {
+            Button {
+                isShowingSettings = true
+            } label: {
+                Image(systemName: "gearshape")
+            }
+            .accessibilityLabel("Settings")
+        }
+    }
+
+    /// A decimal pad has no return key, so the keyboard needs its own way out.
+    /// The chevron reads as a keyboard control rather than competing with a
+    /// screen's own "Done".
+    @ToolbarContentBuilder
     var keyboardToolbar: some ToolbarContent {
         ToolbarItemGroup(placement: .keyboard) {
             Spacer()
-            Button("Done") { focused = nil }
-                .fontWeight(.semibold)
+            Button {
+                focused = nil
+            } label: {
+                Image(systemName: "keyboard.chevron.compact.down")
+            }
+            .accessibilityLabel("Dismiss keyboard")
         }
     }
 }
