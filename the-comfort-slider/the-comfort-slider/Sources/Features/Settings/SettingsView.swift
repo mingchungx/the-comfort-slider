@@ -58,6 +58,15 @@ struct SettingsView: View {
                 } footer: {
                     Text("Adds a collapsible sales-tax percentage to the calculator, starting at this rate.")
                 }
+
+                Section {
+                    legalLink("Privacy Policy", url: Constants.privacyURL)
+                    legalLink("Terms of Use", url: Constants.termsURL)
+                } header: {
+                    Text("About")
+                } footer: {
+                    watermark
+                }
             }
             .scrollDismissesKeyboard(.interactively)
             .navigationTitle("Settings")
@@ -83,10 +92,36 @@ private extension SettingsView {
                 .foregroundStyle(.secondary)
         }
     }
+
+    func legalLink(_ title: String, url: URL) -> some View {
+        Link(destination: url) {
+            HStack {
+                Text(title)
+                Spacer()
+                Image(systemName: "arrow.up.right")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+            .contentShape(.rect)
+        }
+    }
+
+    var watermark: some View {
+        Text("Made with 🧡 by EclipseCard, Inc.")
+            .font(.footnote)
+            .frame(maxWidth: .infinity, alignment: .center)
+            .padding(.top, Constants.watermarkSpacing)
+    }
 }
 
 private enum SettingsField {
     case salary
     case apr
     case tax
+}
+
+private enum Constants {
+    static let privacyURL = URL(string: "https://the-comfort-slider.vercel.app/privacy")!
+    static let termsURL = URL(string: "https://the-comfort-slider.vercel.app/terms")!
+    static let watermarkSpacing = 24.0
 }
