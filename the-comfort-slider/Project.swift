@@ -5,7 +5,7 @@ let project = Project(
     targets: [
         .target(
             name: "the-comfort-slider",
-            destinations: .iOS,
+            destinations: [.iPhone],
             product: .app,
             bundleId: "com.eclipsecard.thecomfortslider",
             deploymentTargets: .iOS("26.0"),
@@ -28,7 +28,7 @@ let project = Project(
         ),
         .target(
             name: "the-comfort-sliderTests",
-            destinations: .iOS,
+            destinations: [.iPhone],
             product: .unitTests,
             bundleId: "com.eclipsecard.thecomfortslider.tests",
             deploymentTargets: .iOS("26.0"),
