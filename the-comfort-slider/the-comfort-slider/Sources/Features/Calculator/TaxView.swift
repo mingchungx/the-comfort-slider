@@ -26,7 +26,9 @@ struct TaxView: View {
                         Text(taxAmount, format: currencyFormat)
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
+                            .monospacedDigit()
                             .contentTransition(.numericText())
+                            .animation(.snappy, value: taxAmount)
                         InfoButton(
                             title: "Sales tax",
                             message: "The tax added on top of the price — this percentage of the total. It's rolled into your out-the-door total and the amount you finance."

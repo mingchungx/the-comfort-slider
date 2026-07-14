@@ -33,7 +33,6 @@ struct CalculatorView: View {
                 viewModel.lockToDefaultSalary()
             }
             .onChange(of: viewModel.monthly) { viewModel.syncSliderIfFollowing() }
-            .onAppear(perform: scheduleKeyboardFocus)
             .sensoryFeedback(.selection, trigger: viewModel.rerollTick)
         }
     }
@@ -106,16 +105,9 @@ private extension CalculatorView {
                 .fontWeight(.semibold)
         }
     }
-
-    func scheduleKeyboardFocus() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + Constants.keyboardDelay) {
-            focused = .price
-        }
-    }
 }
 
 private enum Constants {
     static let sectionSpacing = 20.0
-    static let keyboardDelay = 0.5
     static let glassSpacing = 0.0
 }

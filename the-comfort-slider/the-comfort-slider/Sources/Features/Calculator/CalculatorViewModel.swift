@@ -159,11 +159,14 @@ private extension CalculatorViewModel {
         sliderValue = position
     }
 
-    /// Throttles slider-driven recalculation so a continuous drag recomputes
-    /// (and re-animates) at most once per `sliderThrottle` rather than on every
-    /// pixel of movement. The thumb stays perfectly smooth because it is bound
-    /// to `sliderValue`; only the derived `committedSliderValue` is gated, and a
-    /// trailing commit guarantees the final resting value is exact.
+    /// Throttles slider-driven recalculation so the expensive work — the
+    /// `result` recompute plus every effect keyed off the resulting `zone`
+    /// (spray change-effects, haptics, roast) — fires at most once per
+    /// `sliderThrottle` while the slider is moving, rather than on every pixel.
+    /// This keeps the readout updating live during a drag while capping how fast
+    /// the spray animations can pile up. The thumb stays perfectly smooth because
+    /// it is bound to `sliderValue`; only the derived `committedSliderValue` is
+    /// gated, and a trailing commit guarantees the final resting value is exact.
     func throttleSliderCommit() {
         sliderCommitTask?.cancel()
         let elapsed = Date.now.timeIntervalSince(lastSliderCommit)
@@ -191,6 +194,6 @@ private enum Constants {
     static let percentMax = 100
     static let taxStep = 1.0
     static let taxMax = 100.0
-    static let sliderThrottle = 0.1
+    static let sliderThrottle = 0.05
     static let anchorEpsilon = 0.01
 }

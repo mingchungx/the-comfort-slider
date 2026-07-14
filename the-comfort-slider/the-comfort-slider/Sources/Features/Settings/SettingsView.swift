@@ -46,7 +46,10 @@ struct SettingsView: View {
                 }
 
                 Section {
+                    // The tab bar's `.tint(.primary)` propagates into this view, so the
+                    // switch needs its stock green restored explicitly.
                     Toggle("Enable sales tax", isOn: $preferences.taxEnabled)
+                        .tint(.green)
                     if preferences.taxEnabled {
                         percentField("0", text: $preferences.defaultTaxText, field: .tax)
                     }

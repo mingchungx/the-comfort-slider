@@ -104,7 +104,9 @@ private extension FinancingView {
             Text(amount, format: currencyFormat)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
+                .monospacedDigit()
                 .contentTransition(.numericText())
+                .animation(.snappy, value: amount)
             InfoButton(title: title, message: message)
         }
     }
