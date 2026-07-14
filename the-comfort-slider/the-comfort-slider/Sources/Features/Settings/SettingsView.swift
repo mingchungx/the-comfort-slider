@@ -60,6 +60,7 @@ struct SettingsView: View {
                 }
 
                 Section {
+                    legalLink("Website", url: Constants.websiteURL)
                     legalLink("Privacy Policy", url: Constants.privacyURL)
                     legalLink("Terms of Use", url: Constants.termsURL)
                 } header: {
@@ -121,7 +122,8 @@ private enum SettingsField {
 }
 
 private enum Constants {
-    static let privacyURL = URL(string: "https://the-comfort-slider.vercel.app/privacy")!
-    static let termsURL = URL(string: "https://the-comfort-slider.vercel.app/terms")!
+    static let websiteURL = URL(string: "https://the-comfort-slider.vercel.app")!
+    static let privacyURL = websiteURL.appending(path: "privacy")
+    static let termsURL = websiteURL.appending(path: "terms")
     static let watermarkSpacing = 24.0
 }
