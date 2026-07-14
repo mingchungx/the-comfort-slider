@@ -1,0 +1,242 @@
+@import "tailwindcss";
+
+/*
+  The palette is lifted from the iOS app's ComfortZone — the same three sandy
+  gradients and the same green/amber/red tints. Keep them in sync; the site and
+  the app should read as one product.
+*/
+@theme {
+  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-instrument-serif), ui-serif, Georgia, serif;
+
+  --color-ink: oklch(0.24 0.02 150);
+  --color-subtle: oklch(0.48 0.02 150);
+  --color-sand: oklch(0.97 0.015 95);
+
+  --color-comfortable: oklch(0.65 0.16 152);
+  --color-stretching: oklch(0.68 0.15 62);
+  --color-unhinged: oklch(0.58 0.2 27);
+
+  --radius-card: 28px;
+}
+
+/*
+  Zone variables drive every tinted surface on the page. The hero slider rewrites
+  them on <html>, so moving the slider retints the whole site at once — the web
+  read of the app's zone-tinted Metal shader.
+
+  They are registered with @property so the browser knows they hold colours, which
+  is what makes them *animatable*. A plain custom property is substituted as text:
+  `transition: background` on a gradient built from var()s does nothing, and the
+  colour snaps. Registered, the variables themselves interpolate, and every surface
+  that reads them — the washes, the accents, the slider track — fades together.
+*/
+@property --zone {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: oklch(0.65 0.16 152);
+}
+@property --wash-a {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: oklch(0.88 0.09 155);
+}
+@property --wash-b {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: oklch(0.93 0.05 150);
+}
+@property --wash-c {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: oklch(0.96 0.03 95);
+}
+
+:root {
+  --zone: oklch(0.65 0.16 152);
+  --wash-a: oklch(0.88 0.09 155);
+  --wash-b: oklch(0.93 0.05 150);
+  --wash-c: oklch(0.96 0.03 95);
+
+  /* The zone crossfade. Ambient washes take their time; the accent follows sooner. */
+  transition:
+    --zone 550ms cubic-bezier(0.32, 0.72, 0, 1),
+    --wash-a 900ms cubic-bezier(0.32, 0.72, 0, 1),
+    --wash-b 900ms cubic-bezier(0.32, 0.72, 0, 1),
+    --wash-c 900ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-color: var(--color-sand);
+  color: var(--color-ink);
+}
+
+/* Three drifting washes over the sand. The fade lives on the variables (see :root),
+   not here — a gradient built from var()s cannot itself be transitioned. */
+.shader-bg {
+  background:
+    radial-gradient(55% 45% at 12% 0%, var(--wash-a) 0%, transparent 62%),
+    radial-gradient(65% 55% at 88% 8%, var(--wash-b) 0%, transparent 60%),
+    radial-gradient(90% 60% at 50% 100%, var(--wash-c) 0%, transparent 72%);
+}
+
+/*
+  Liquid Glass, as close as the web gets: translucent, letting the background
+  through, with a lit top edge and a soft ambient shadow. Same rule as the app —
+  never nest one of these inside another.
+*/
+.glass {
+  background: color-mix(in oklch, white 58%, transparent);
+  backdrop-filter: blur(28px) saturate(170%);
+  -webkit-backdrop-filter: blur(28px) saturate(170%);
+  border: 1px solid color-mix(in oklch, white 75%, transparent);
+  box-shadow:
+    inset 0 1px 0 0 color-mix(in oklch, white 85%, transparent),
+    0 14px 44px -14px oklch(0.35 0.04 150 / 0.3);
+}
+
+/* No transition needed: --zone itself animates, so anything reading it fades with it. */
+.zone-text {
+  color: var(--zone);
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* iOS-style slider thumb: a white capsule with a real shadow, on a zone-tinted track. */
+.zone-range:focus {
+  outline: none;
+}
+.zone-range:focus-visible {
+  outline: 2px solid var(--zone);
+  outline-offset: 6px;
+}
+.zone-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: white;
+  box-shadow: 0 1px 6px oklch(0.3 0.04 150 / 0.35);
+  cursor: grab;
+  transition: transform 150ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+.zone-range::-webkit-slider-thumb:active {
+  transform: scale(1.12);
+  cursor: grabbing;
+}
+.zone-range::-moz-range-thumb {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 999px;
+  background: white;
+  box-shadow: 0 1px 6px oklch(0.3 0.04 150 / 0.35);
+  cursor: grab;
+}
+
+/* Legal prose. Set once here so the policy pages stay plain markup. */
+.legal h2 {
+  margin-top: 2.75rem;
+  font-size: 1.375rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.legal h3 {
+  margin-top: 1.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.legal p,
+.legal li {
+  margin-top: 0.9rem;
+  line-height: 1.75;
+  color: var(--color-subtle);
+}
+.legal ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+}
+.legal strong {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+.legal a {
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Odometer digits — see RollingNumber. Every box is exactly 1em tall so the digit
+   columns, the commas, and the currency symbol all sit on the same line. */
+.roll {
+  display: inline-flex;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  vertical-align: baseline;
+}
+.roll-static {
+  display: block;
+  height: 1em;
+}
+.roll-col {
+  display: block;
+  height: 1em;
+  overflow: hidden;
+}
+.roll-track {
+  display: block;
+  /* Overshoots slightly and settles — the same lively spring the app's .snappy has. */
+  transition: transform 520ms cubic-bezier(0.34, 1.32, 0.5, 1);
+  will-change: transform;
+}
+.roll-digit {
+  display: block;
+  height: 1em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .roll-track {
+    transition: none;
+  }
+}
+
+/* Money spray, the web read of the app's Pow effect. */
+@keyframes spray {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.6) rotate(0deg);
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-190px) scale(1.15) rotate(22deg);
+  }
+}
+.spray {
+  animation: spray 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .spray {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  :root,
+  [class*="transition"] {
+    transition: none !important;
+  }
+}

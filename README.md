@@ -41,6 +41,18 @@ tuist generate   # generates and opens the Xcode project
 Then build and run the `the-comfort-slider` scheme. Haptics, glass, and the shader
 require a real iOS 26 simulator or device (they don't render in previews).
 
+## Website
+
+`web/` holds the marketing site — a Next.js app that exports to a static bundle. It
+is the App Store Support URL, and it hosts the Privacy Policy and Terms of Use.
+
+```sh
+cd web
+pnpm install
+pnpm dev     # http://localhost:3000
+pnpm build   # static export to web/out/
+```
+
 ## Contributing
 
 Read [`AGENTS.md`](AGENTS.md) before working in this repo — it covers the directory
