@@ -13,5 +13,6 @@ export const site = {
   },
   /// Set this the day the app is approved; every CTA switches from
   /// "coming soon" to a live App Store link on its own.
-  appStore: null as string | null,
+  appStore:
+    "https://apps.apple.com/us/app/the-comfort-slider/id6787646206" as string | null,
 } as const;
